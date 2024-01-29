@@ -2,8 +2,8 @@
 #include "system_stm32h7xx.h"
 #include "main.h"
 
-#define HSE_VALUE 8000000UL // Value of the external oscillator in Hz
-#define LSE_VALUE 32768UL // Value of the external oscillator in Hz
+// #define HSE_VALUE 8000000UL // Value of the external oscillator in Hz
+// #define LSE_VALUE 32768UL // Value of the external oscillator in Hz
 
 /**
  * @brief Manual clock configuration
@@ -91,18 +91,45 @@ void SystemClock_Config(void)
   }
 }
 
-void GPIO_Config() {
-  // Enable GPIOA clock
-  RCC->AHB4ENR |= RCC_AHB4ENR_GPIOAEN;
+void PeriphCommonClock_Config(void)
+{
+  RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
 
-  // Configure PA5 as output
-  GPIOA->MODER &= ~GPIO_MODER_MODE5_Msk;
-  GPIOA->MODER |= GPIO_MODER_MODE5_0;
+  /** Initializes the peripherals clock
+  */
+  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_ADC|RCC_PERIPHCLK_FDCAN;
+  PeriphClkInitStruct.PLL2.PLL2M = 4;
+  PeriphClkInitStruct.PLL2.PLL2N = 9;
+  PeriphClkInitStruct.PLL2.PLL2P = 2;
+  PeriphClkInitStruct.PLL2.PLL2Q = 2;
+  PeriphClkInitStruct.PLL2.PLL2R = 2;
+  PeriphClkInitStruct.PLL2.PLL2RGE = RCC_PLL2VCIRANGE_3;
+  PeriphClkInitStruct.PLL2.PLL2VCOSEL = RCC_PLL2VCOMEDIUM;
+  PeriphClkInitStruct.PLL2.PLL2FRACN = 3072;
+  PeriphClkInitStruct.FdcanClockSelection = RCC_FDCANCLKSOURCE_PLL2;
+  PeriphClkInitStruct.AdcClockSelection = RCC_ADCCLKSOURCE_PLL2;
+  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
+
+void GPIO_Init() {
+  // Enable GPIO clocks
+  RCC->AHB4ENR |= RCC_AHB4ENR_GPIOCEN | RCC_AHB4ENR_GPIOHEN | RCC_AHB4ENR_GPIOAEN
+               | RCC_AHB4ENR_GPIOBEN | RCC_AHB4ENR_GPIOFEN | RCC_AHB4ENR_GPIODEN
+               | RCC_AHB4ENR_GPIOGEN | RCC_AHB4ENR_GPIOEEN;
+
+  GPIOB->MODER |= GPIO_MODER_MODE0_0; // Set GPIO mode Output
 }
 
 void LED_Blink() {
-  // Toggle PA5
-  GPIOA->ODR ^= GPIO_ODR_OD5;
+  // Toggle PB0
+  GPIOB->ODR ^= GPIO_ODR_OD5;
+}
+
+void Error_Handler() {
+  while(1);
 }
 
 /**
@@ -111,12 +138,14 @@ void LED_Blink() {
  * @return int 
  */
 int main(void) {
-  
-  System_Config();
+
+  HAL_Init();
+  SystemClock_Config();
+  PeriphCommonClock_Config();
+  GPIO_Init();
 
   while (1) {
     LED_Blink();
     HAL_Delay(1000);
   }
-  return 0;
 }
