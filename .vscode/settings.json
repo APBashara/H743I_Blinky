@@ -1,6 +1,7 @@
 {
     "files.associations": {
-        "system_stm32h7xx.h": "c"
+        "system_stm32h7xx.h": "c",
+        "cmsis_os.h": "c"
     },
     "cortex-debug.gdbPath": "/usr/bin/gdb-multiarch",
     "cortex-debug.stutilPath": "/usr/bin/st-util",

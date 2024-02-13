@@ -4,7 +4,8 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/Drivers/CMSIS/Device/ST/STM32H7xx/Include"
+                "${workspaceFolder}/Drivers/CMSIS/Device/ST/STM32H7xx/Include",
+                "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

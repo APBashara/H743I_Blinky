@@ -3,6 +3,10 @@
 
 #include "stm32h743xx.h"
 
+/**
+ * @brief Initialize the LED GPIO Pins
+ * 
+ */
 void static inline GPIOB_Init() {
   RCC->AHB4ENR |= RCC_AHB4ENR_GPIOBEN; // Enable GPIOB clock
 
@@ -26,8 +30,25 @@ void static inline GPIOB_Init() {
   GPIOB->OTYPER &= GPIO_OTYPER_OT14_Msk;
 }
 
-void static inline Toggle_Pin(GPIO_TypeDef* LED_Port, int LED_Pin) {
-    LED_Port->ODR ^= (1 << LED_Pin);
+/**
+ * @brief Toggle the GPIO Pin State
+ * 
+ * @param Port GPIO Port of the pin to toggle
+ * @param Pin Number of pin to toggle
+ */
+void static inline Toggle_Pin(GPIO_TypeDef* Port, int Pin) {
+    Port->ODR ^= (1 << Pin);
+}
+
+/**
+ * @brief Get status bit of GPIO Pin
+ * 
+ * @param Port GPIO Port of the pin to read
+ * @param Pin Pin number to read
+ * @return int the bit value of the pin
+ */
+int static inline Read_Pin(GPIO_TypeDef* Port, int Pin) {
+  return Port->IDR &= (1 << Pin);
 }
 
 
