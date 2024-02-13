@@ -5,39 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Cortex Debug Default",
-            "cwd": "${workspaceFolder}",
-            "executable": "./bin/executable.elf",
-            "request": "launch",
-            "type": "cortex-debug",
-            "runToEntryPoint": "main",
-            "servertype": "stlink"
-        },
-        {
             "name": "Cortex Debug",
             "cwd": "${workspaceFolder}",
-            "executable": "${workspaceFolder}/build/Blinky.elf",
+            "executable": "./build/Blinky.elf",
             "request": "launch",
             "type": "cortex-debug",
-            "servertype": "stlink",
-            "device": "STM32H743ZI",
+            "servertype": "stutil",
+            "device": "STM32H743IZ2",
             "interface": "swd",
-            "runToEntryPoint": "main",
             "preLaunchCommands": ["make -j8"],
-            // "svdFile": "${workspaceFolder}/STM32H743ZI.svd",
-            "swoConfig": {
-                "enabled": true,
-                "cpuFrequency": 4000000,
-                "swoFrequency": 4000000,
-                "source": "probe",
-                "decoders": [
-                    {
-                        "type": "console",
-                        "label": "ITM",
-                        "port": 0
-                    }
-                ]
-            }
+            "svdFile": "",
+            "rtos": "freeRTOS"
         }
     ]
 }
