@@ -9,9 +9,13 @@ int main(void) {
   // LD3 (red): GPIOB pin 14
 
   // Set to output mode
-  GPIOB->MODER |= (0x1 << GPIO_MODER_MODE0_Pos);
-  GPIOB->MODER |= (0x1 << GPIO_MODER_MODE7_Pos);
-  GPIOB->MODER |= (0x1 << GPIO_MODER_MODE14_Pos);
+  GPIOB->MODER |= GPIO_MODER_MODE0_0;
+  GPIOB->MODER &= ~GPIO_MODER_MODE0_1;
+  GPIOB->MODER |= GPIO_MODER_MODE7_0;
+  GPIOB->MODER &= ~GPIO_MODER_MODE7_1;
+  GPIOB->MODER |= GPIO_MODER_MODE14_0;
+  GPIOB->MODER &= ~GPIO_MODER_MODE14_1;
+
   // set to push-pull output mode
   GPIOB->OTYPER &= GPIO_OTYPER_OT0_Msk;
   GPIOB->OTYPER &= GPIO_OTYPER_OT7_Msk;
@@ -22,6 +26,8 @@ int main(void) {
     GPIOB->ODR ^= GPIO_ODR_OD0;
     GPIOB->ODR ^= GPIO_ODR_OD7;
     GPIOB->ODR ^= GPIO_ODR_OD14;
-    HAL_Delay(100);
+    for (int i = 0; i < 1000000; i++) {
+      __asm__("nop");
+    }
   }
 }

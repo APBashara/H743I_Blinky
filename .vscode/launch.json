@@ -7,15 +7,14 @@
         {
             "name": "Cortex Debug",
             "cwd": "${workspaceFolder}",
+            "preLaunchCommands": ["make -j8"],
             "executable": "./build/Blinky.elf",
             "request": "launch",
             "type": "cortex-debug",
             "servertype": "stutil",
             "device": "STM32H743IZ2",
             "interface": "swd",
-            "preLaunchCommands": ["make -j8"],
-            "svdFile": "",
-            "rtos": "freeRTOS"
+            "svdFile": "/home/alex/Documents/svd/STM32H743.svd",
         }
     ]
 }
