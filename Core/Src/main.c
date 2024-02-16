@@ -8,24 +8,6 @@
 #define RED_LED 14
 
 
-// static volatile uint32_t ms_tick = 0 ; // TODO Systick Counter
-
-/**
- * @brief Stack Overflow Delay function
- * @note TODO
- */
-// void SysTick_Init(void)  {
-//     SysTick_Config( SystemCoreClock / 1000 ) ;  
-// }
-
-// void SysTick_Handler(void) {
-//     ms_tick++;
-// }
-
-// void delayMs( uint32_t delay) {
-//     uint32_t start_tick = ms_tick ;
-//     while( (ms_tick - start_tick) < delay );
-// }
 void BlinkGreenTask(void *argument);
 void BlinkRedTask(void *argument);
 void Error_Handler(void);
@@ -51,16 +33,10 @@ const osThreadAttr_t BlinkGreenTask_attributes = {
 };
 
 /**
- * @brief Quick and dirty delay function
- * @note TODO: Make a better delay function
+ * @brief Main function to initialize peripherals and start the RTOS
+ * @note Do not put anything in the while loop as it should not be reached
+ * @return int 
  */
-void delay(uint32_t delay) {
-  for (volatile int i = 0; i < delay; i++) {
-    __asm__("nop");
-  }
-}
-
-
 int main(void) {
   // Call custom GPIO initialization function
   GPIOB_Init();
@@ -76,6 +52,11 @@ int main(void) {
   }
 }
 
+/**
+ * @brief Task for blinking the Red LED
+ * 
+ * @param argument 
+ */
 void BlinkRedTask(void *argument) {
   for (;;) {
     Toggle_Pin(GPIOB, RED_LED);
@@ -83,6 +64,11 @@ void BlinkRedTask(void *argument) {
   }
 }
 
+/**
+ * @brief Task for blinking the Green LED
+ * 
+ * @param argument 
+ */
 void BlinkGreenTask(void *argument) {
   for (;;) {
     Toggle_Pin(GPIOB, GREEN_LED);
