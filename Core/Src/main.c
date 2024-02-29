@@ -45,8 +45,31 @@ void SysClockConfig() {
   FLASH->ACR &= ~FLASH_ACR_WRHIGHFREQ_Msk; // Clear Programming Delay bits
   FLASH->ACR |= (2UL << FLASH_ACR_WRHIGHFREQ_Pos); // Set Programming Delay
 
-  // Set PLLs
+  // Make sure PLLs are Disabled
+  RCC->CR &= ~RCC_CR_PLL1ON; // Disable PLL1
+  RCC->CR &= ~RCC_CR_PLLO2N; // Disable PLL2
+  RCC->CR &= ~RCC_CR_PLL3ON; // Disable PLL3
 
+  // Configure PLL1
+  RCC->PLL1DIVR &= ~RCC_PLL1DIVR_R1_Msk; // Clear DIVR
+  RCC->PLL1DIVR |= (1UL << RCC_PLL1DIVR_R1_Pos); // Set DIVR to /2
+  RCC->PLL1DIVR &= ~RCC_PLL1DIVR_Q1_Msk; // Clear DIVQ
+  RCC->PLL1DIVR |= (1UL << RCC_PLL1DIVR_Q1_Pos); // Set DIVQ to /2
+  RCC->PLL1DIVR &= ~RCC_PLL1DIVR_P1_Msk; // Clear P1
+  RCC->PLL1DIVR |= (1UL << RCC_PLL1DIVR_P1_Pos); // Set P1 to /2
+  RCC->PLL1DIVR &= ~RCC_PLL1DIVR_N1_Msk; // Clear DIVN
+  RCC->PLL1DIVR |= (480UL << RCC_PLL1DIVR_N1_Pos); // Set DIVN to *480
+
+  
+  // Initialize PLLs
+  RCC->CR |= RCC_CR_HSION; // Make sure HSI in enabled
+  while (!(RCC->CR & RCC_CR_HSIRDY)); // Wait for HSI to be ready
+  RCC->CR |= RCC_CR_PLL1ON; // Enable PLL1
+  while (!(RCC->CR & RCC_CR_PLL1RDY)); // Wait for PLL1 to be ready
+  RCC->CR |= RCC_CR_PLL2ON; // Enable PLL2
+  while (!(RCC->CR & RCC_CR_PLL2RDY)); // Wait for PLL2 to be ready
+  RCC->CR &= ~RCC_CR_PLL3ON; // Disable PLL3
+  
 }
 
 /**
@@ -97,6 +120,6 @@ void BlinkGreenTask(void *argument) {
  * @brief Error Handler
  * @note TODO: Implement a more detailed error handler
  */
-void Error_Handler(void) {
+void Error_Handler() {  
   while (1) {}
 }
