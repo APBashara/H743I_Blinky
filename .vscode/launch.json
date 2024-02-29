@@ -15,6 +15,17 @@
             "device": "STM32H743IZ2",
             "interface": "swd",
             "svdFile": "/home/alex/Documents/svd/STM32H743.svd",
+        },
+        {
+            "name": "Cortex Attach",
+            "cwd": "${workspaceFolder}",
+            "executable": "./build/Blinky.elf",
+            "request": "attach",
+            "type": "cortex-debug",
+            "servertype": "stutil",
+            "device": "STM32H743IZ2",
+            "interface": "swd",
+            "svdFile": "/home/alex/Documents/svd/STM32H743.svd",
         }
     ]
 }
