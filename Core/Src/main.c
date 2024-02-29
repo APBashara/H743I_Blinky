@@ -10,6 +10,7 @@
 
 void BlinkGreenTask(void *argument);
 void BlinkRedTask(void *argument);
+void SysClockConfig(void);
 void Error_Handler(void);
 
 /**
@@ -31,6 +32,22 @@ const osThreadAttr_t BlinkGreenTask_attributes = {
   .priority = (osPriority_t) osPriorityNormal,
   .stack_size = 128 * 4
 };
+
+/**
+ * @brief Configure System Clock for 480MHz clock speed
+ * 
+ */
+void SysClockConfig() {
+  // Page 160 RM0433 for Latency values, VOS2 is default
+  FLASH->ACR &= ~FLASH_ACR_LATENCY_Msk; // Clear Latency bits
+  FLASH->ACR |= FLASH_ACR_LATENCY_4WS; // Set Latency to 4 Wait States
+
+  FLASH->ACR &= ~FLASH_ACR_WRHIGHFREQ_Msk; // Clear Programming Delay bits
+  FLASH->ACR |= (2UL << FLASH_ACR_WRHIGHFREQ_Pos); // Set Programming Delay
+
+  // Set PLLs
+
+}
 
 /**
  * @brief Main function to initialize peripherals and start the RTOS
