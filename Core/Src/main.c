@@ -102,7 +102,8 @@ void SysClockConfig() {
   
   // Set System Clock Source to PLL1
   // TODO: Issue is here, system freaks out when trying to switch to PLL
-  RCC->CFGR |= (3UL << RCC_CFGR_SW_Pos); // Set System Clock to PLL1
+  RCC->CFGR &= ~RCC_CFGR_SW_Msk; // Clear System Clock bits
+  RCC->CFGR |= RCC_CFGR_SW_PLL1; // Set System Clock to PLL1
   while (!(RCC->CFGR & RCC_CFGR_SWS_PLL1)); // Wait for PLL1 to be system clock
 }
 
